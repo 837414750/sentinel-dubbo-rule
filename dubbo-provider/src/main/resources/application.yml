@@ -1,0 +1,13 @@
+server:
+  port: 6000
+dubbo:
+  registry:
+    address: nacos://${nacos.address:127.0.0.1}:8848?username=nacos&password=nacos
+  protocol:
+    name: tri
+    port: 50051
+  application:
+    logger: slf4j
+    name: dubbo-provider
+  metadata-report:
+    address: nacos://${nacos.address:127.0.0.1}:8848?username=nacos&password=nacos

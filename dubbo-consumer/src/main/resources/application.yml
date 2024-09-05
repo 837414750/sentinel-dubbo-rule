@@ -1,0 +1,61 @@
+server:
+  port: 6001
+
+dubbo:
+  registry:
+    address: nacos://${nacos.address:127.0.0.1}:8848
+  protocol:
+    name: tri
+    port: 50053
+  application:
+    logger: slf4j
+    name: ${spring.application.name}
+    qos-port: 33333
+
+spring:
+  application:
+    name: dubbo-consumer
+  cloud:
+    nacos:
+      discovery: #配置nacos注册中心地址
+        server-addr: nacos.mall.com:8848
+        username: nacos
+        password: nacos
+
+    sentinel:
+      transport:
+        # 添加sentinel的控制台地址
+        dashboard: 127.0.0.1:8080
+      datasource:
+        param-flow-rules: #热点参数规则
+          nacos:
+            server-addr: nacos.mall.com:8848
+            namespace: sentinel-flow-rules
+            username: nacos
+            password: nacos
+            dataId: ${spring.application.name}-param-flow-rules
+            groupId: SENTINEL_GROUP   # 注意groupId对应Sentinel Dashboard中的定义
+            data-type: json
+            rule-type: param-flow
+        flow-rules: #流控规则
+          nacos:
+            server-addr: nacos.mall.com:8848
+            namespace: sentinel-flow-rules
+            username: nacos
+            password: nacos
+            dataId: ${spring.application.name}-flow-rules
+            groupId: SENTINEL_GROUP   # 注意groupId对应Sentinel Dashboard中的定义
+            data-type: json
+            rule-type: flow
+
+#暴露actuator端点   http://localhost:8800/actuator/sentinel
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+
+logging:
+  level:
+    com.alibaba.cloud.nacos.client.NacosPropertySourceBuilder: debug
